@@ -1,8 +1,11 @@
+
 import { Router } from "express"; 
 import Database from "../db/connection/bdAsync.js";
 import queryAsync from "../db/querys/queryAsync.js";
 
+
 const Routes =  Router(); 
+
 
 // Routes.get("/", (req, res)=>{
 //     res.send("hello"); 
@@ -123,6 +126,23 @@ Routes.delete("/personas/:id", async (req, res) => {
     }
 });
 
+
+
+Routes.post("/login", (req,res) => {
+    req.session.user = {
+        //logica de login
+        id: "1",
+        username: "admin"
+    }
+});
+
+Routes.get("/logout", (req,res) => {
+    // Destruir login
+    req.session.destroy((err) => {
+        if(err) throw err;
+        res.json({message: "logout"});
+    })
+});
 
 
 export default Routes;

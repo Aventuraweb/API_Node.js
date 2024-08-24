@@ -1,17 +1,35 @@
-import express from "express"; 
-import Router from "./Routes/route.js"; // aqui se esta recuperando 
-import Cors from "cors"
+    import express from "express"; 
+    import Router from "./Routes/route.js"; // aqui se esta recuperando 
+    import dotenv from "dotenv"; 
+    import Cors from "cors"; 
+    import session from "express-session";
+    import limiter from "./Routes/imit.js";
 
-const App = express(); 
+    dotenv.config(); 
 
-App.use(Cors()); 
-App.use(express.json()); 
-App.use(Router); // para usarla la ruta
+    const App = express(); 
+
+    App.use(Cors()); // 
+
+    App.use(limiter) // para usarlo solo 
+    
+    // App.use("/home/", limiter)  // para usarlo en una ruta en especifico 
+
+    App.use(session ({
+        secret: process.env.SECRET_KEY, 
+        resave: false, 
+        saveUninitialized: true, 
+        cookie: {secure: false, express: null}
+    }));
+
+    App.use(express.json());  //express crear rutas del servidor 
+    App.use(Router);  // para usarla la ruta
 
 
-// se tiene el proyecto inicializado con esto 
-const port = 8000; 
+    const port = process.env.port || 8000; 
 
-App.listen(port,()=>{
-    console.log( `http://localhost:${port}`); 
-})
+    // const port = 3000; 
+
+    App.listen(port,()=>{
+        console.log( `http://localhost:${port}`); 
+    })
